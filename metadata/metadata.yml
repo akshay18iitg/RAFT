@@ -1,0 +1,23 @@
+metadata_version: 1
+name: Deep Recurrent Optical Flow Learning for Particle Image Velocimetry Data
+description: "This is the official PyTorch implementation of Deep Recurrent Optical Flow Learning for Particle Image Velocimetry Data published in Nature Machine Intelligence.  In this work, we propose a deep neural network-based approach for learning displacement fields in an end-to-end manner, focusing on the specific case of Particle Image Velocimetry (PIV). \nPIV is a key approach in experimental fluid dynamics and of fundamental importance in diverse applications, including automotive, aerospace, and biomedical engineering.  In contrast to standard PIV methods, our RAFT-PIV approach is general, largely automated, and provides much higher spatial resolution."
+tags:
+- Particle Image Velocimetry
+- Optical Flow
+- deep-convolutional-neural-networks
+authors:
+- name: Christian Lagemann
+  affiliations:
+  - name: RWTH Aachen University
+- name: Kai Lagemann
+  affiliations:
+  - name: German Center for Neurodegenerative Diseases
+- name: Sach Mukherjee
+  affiliations:
+  - name: German Center for Neurodegenerative Diseases
+- name: Wolfgang Schröder
+  affiliations:
+  - name: RWTH Aachen University
+corresponding_contributor:
+  name: Christian Lagemann
+  email: c.lagemann@aia.rwth-aachen.de
