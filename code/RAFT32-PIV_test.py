@@ -42,7 +42,7 @@ import os.path
 class TFRecordPipeline(Pipeline):
     def __init__(self, batch_size, num_threads, device_id, num_gpus, shard_id, num_shards, tfrecord, tfrecord_idx, exec_pipelined=False, exec_async=False, is_shuffle=False, image_shape=[2,32,32], label_shape=[2,12]):
         super(TFRecordPipeline, self).__init__(batch_size, num_threads, device_id, exec_pipelined=False, exec_async=False)
-        self.input = ops.TFRecordReader(path = tfrecord, 
+        self.input = ops.TFRecordReader(path = tfrecord,
                                         index_path = tfrecord_idx,
                                         random_shuffle=is_shuffle,
                                         pad_last_batch = True,
@@ -52,7 +52,7 @@ class TFRecordPipeline(Pipeline):
                                                     "label": tfrec.FixedLenFeature([], tfrec.string,  ""),
                                                     "flow" : tfrec.FixedLenFeature([], tfrec.string, ""),
                                                    })
-    
+
         self.decode = ops.PythonFunction(function=self.extract_view, num_outputs=1)
         self.reshape_image = ops.Reshape(shape=image_shape)
         self.reshape_label = ops.Reshape(shape=label_shape)
@@ -153,7 +153,7 @@ def main():
     parser.add_argument('--output_dir_results', type=str, default='./test_results/',
                         help='output directory of test results')
 
-    parser.add_argument('--test_dataset', type=str, default='backstep',
+    parser.add_argument('--test_dataset', type=str, default='test',
                         choices=['backstep', 'cylinder', 'jhtdb', 'dns_turb', 'sqg', 'tbl', 'twcf'],
                         help='test dataset to evaluate')
     parser.add_argument('--plot_results', type=eval, default=True,
@@ -243,13 +243,13 @@ def train(GPU,args):
     if rank == 0:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-    
+
     if args.recover:
         print('recovering: ', args.input_path_ckpt)
         checkpoint = torch.load(args.input_path_ckpt)
         model.load_state_dict(checkpoint['model_state_dict'],strict=False)
         print('model recovered')
-    
+
     model.cuda(GPU)
     model = DDP(model, device_ids=[GPU],find_unused_parameters=True)
 
@@ -290,7 +290,8 @@ def train(GPU,args):
         test_tfrecord = '../data/Test_Dataset_AR_rawImage.tfrecord-00000-of-00001'
         test_tfrecord_idx = "../data/idx_files/Test_Dataset_AR_rawImage.idx"
     else:
-        raise ValueError('Selected test dataset not available: ', args.test_dataset)
+        test_tfrecord = '../data/data_tfrecord.tfrecord'
+        # raise ValueError('Selected test dataset not available: ', args.test_dataset)
 
     # DALI data loading
     tfrecord2idx_script = "tfrecord2idx"
