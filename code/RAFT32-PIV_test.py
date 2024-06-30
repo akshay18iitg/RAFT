@@ -291,7 +291,7 @@ def train(GPU,args):
         test_tfrecord_idx = "../data/idx_files/Test_Dataset_AR_rawImage.idx"
     else:
         test_tfrecord = '../data/data_tfrecord.tfrecord'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_AR_rawImage.idx"
+        test_tfrecord_idx = "../data/idx_files/data.idx"
         # raise ValueError('Selected test dataset not available: ', args.test_dataset)
 
     # DALI data loading
