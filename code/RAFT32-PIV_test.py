@@ -340,8 +340,8 @@ def train(GPU,args):
             local_dict = sample_batched[0]
             images = local_dict['target'].type(torch.FloatTensor).cuda(GPU) / 256
             flows = local_dict['flow'].type(torch.FloatTensor).cuda(GPU)
-            print(flows.size)
-            print(images.size)
+            print(flows.size())
+            print(images.size())
 
             folding_mask = torch.ones_like(images)
 
