@@ -262,8 +262,8 @@ def train(GPU,args):
     elif args.test_dataset == 'cylinder':
         print('cylinder dataset loaded', flush=True)
         # cylinder test case
-        test_tfrecord = '../data/Test_Dataset_10Imgs_cylinder.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_10Imgs_cylinder.idx"
+        test_tfrecord = './data/Test_Dataset_10Imgs_cylinder.tfrecord-00000-of-00001'
+        test_tfrecord_idx = "./data/idx_files/Test_Dataset_10Imgs_cylinder.idx"
     elif args.test_dataset == 'jhtdb':
         print('jhtdb dataset loaded', flush=True)
         # jhtdb test case
