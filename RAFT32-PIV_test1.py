@@ -4,14 +4,12 @@ Copyright (c) 2020-2021, Christian Lagemann
 
 import os
 import argparse
-# import torch.multiprocessing as mp
 import torchvision
 import torchvision.transforms as transforms
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-# import torch.distributed as dist
-# from torch.nn.parallel import DistributedDataParallel as DDP
+
 import time
 from tqdm import tqdm
 import math
@@ -190,46 +188,12 @@ def main():
 def train(GPU,args):
     #init procedure
     torch.manual_seed(0)
-    # print('getting master_addr', flush=True)
-    # if "SLURM_JOBID" in os.environ:
-    #     masterIP, _, _, _, _, _, _ = resolve_master_node(platform.node(), 8888)
-    #     os.environ['MASTER_ADDR'] = masterIP
-    # else:
-    #     os.environ['MASTER_ADDR'] = '127.0.0.1'
 
     print('start GPU:' + str(GPU))
-
-    # MASTER_PORT = int(os.environ.get("MASTER_PORT", 8738))
-    # MASTER_ADDR = os.environ.get("MASTER_ADDR")
-    # N_NODES = int(os.environ.get("WORLD_SIZE", os.environ.get("SLURM_NNODES", 1)))
-    # NODE_RANK = int(os.environ.get("RANK", os.environ.get("SLURM_PROCID", 0)))
-    # WORLD_SIZE = args.gpus * N_NODES
-    # rank = NODE_RANK * args.gpus + GPU
-    # backend = 'nccl'
-    # NODE_NAME = socket.gethostname()
-    # NODE_IP = socket.gethostbyname(NODE_NAME)
-
-    # print('node_name', NODE_NAME, 'node_ip', NODE_IP, 'rank', rank, 'node_rank', NODE_RANK, 'GPU', GPU, 'master_IP', MASTER_ADDR, 'master_port', MASTER_PORT, 'world_size    ', WORLD_SIZE, flush=True)
-
-    # tcp_store = dist.TCPStore(MASTER_ADDR, MASTER_PORT, WORLD_SIZE, rank == 0)
-    # dist.init_process_group(backend,
-                            # store=tcp_store,
-                            # rank=rank,
-                            # world_size=WORLD_SIZE
-                            # )
 
     int_GPU = GPU
     GPU = torch.device("cuda", GPU)
     torch.cuda.set_device(GPU)
-
-    # print('synchronizing all processes', flush=True)
-    # dist.barrier()
-    # print('processes synchronized', flush=True)
-
-    # create a second gloo group
-    # print('creating second process group', flush=True)
-    # list_ranks = [int(_) for _ in range(dist.get_world_size())]
-    # gather_group = dist.new_group(ranks=list_ranks, backend='gloo')
 
     if args.arch == 'RAFT32':
         model = RAFT()
@@ -241,7 +205,7 @@ def train(GPU,args):
     print('number of trainable parameters: ', pytorch_trainable_params)
 
     output_dir = args.output_dir_results + args.name
-    # if rank == 0:
+    
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -252,49 +216,11 @@ def train(GPU,args):
         print('model recovered')
 
     model.cuda(GPU)
-    # model = DDP(model, device_ids=[GPU],find_unused_parameters=True)
 
     # dataset
-    if args.test_dataset == 'backstep':
-        print('backstep dataset loaded', flush=True)
-        # backstep test case
-        test_tfrecord = '../data/Test_Dataset_10Imgs_backstep.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_10Imgs_backstep.idx"
-    elif args.test_dataset == 'cylinder':
-        print('cylinder dataset loaded', flush=True)
-        # cylinder test case
-        test_tfrecord = '../data/Test_Dataset_10Imgs_cylinder.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_10Imgs_cylinder.idx"
-    elif args.test_dataset == 'jhtdb':
-        print('jhtdb dataset loaded', flush=True)
-        # jhtdb test case
-        test_tfrecord = '../data/Test_Dataset_10Imgs_jhtdb.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_10Imgs_jhtdb.idx"
-    elif args.test_dataset == 'dns_turb':
-        print('dns-turbulence dataset loaded', flush=True)
-        # dns turbulence test case
-        test_tfrecord = '../data/Test_Dataset_10Imgs_dns_turb.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_10Imgs_dns_turb.idx"
-    elif args.test_dataset == 'sqg':
-        print('sqg dataset loaded', flush=True)
-        # sqg test case
-        test_tfrecord = '../data/Test_Dataset_10Imgs_sqg.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_10Imgs_sqg.idx"
-    elif args.test_dataset == 'tbl':
-        print('TBL dataset loaded', flush=True)
-        # DNS transitional TBL
-        test_tfrecord = '../data/Dataset_TransTBL_Original8px_fullFrame_withGT.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Dataset_TransTBL_Original8px_withGT_fullFrame.idx"
-    elif args.test_dataset == 'twcf':
-        print('TWCF dataset loaded', flush=True)
-        # experimental data turbulent wavy channel flow
-        test_tfrecord = '../data/Test_Dataset_AR_rawImage.tfrecord-00000-of-00001'
-        test_tfrecord_idx = "../data/idx_files/Test_Dataset_AR_rawImage.idx"
-    else:
-        test_tfrecord = '../data/data_tfrecord.tfrecord'
-        # raise ValueError('Selected test dataset not available: ', args.test_dataset)
+    test_tfrecord = '../data/data_tfrecord.tfrecord'
+    test_tfrecord_idx = "./data/idx_files/data.idx"
 
-    # DALI data loading
     tfrecord2idx_script = "tfrecord2idx"
     if not os.path.isfile(test_tfrecord_idx):
         call([tfrecord2idx_script, test_tfrecord, test_tfrecord_idx])

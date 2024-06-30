@@ -1,0 +1,11 @@
+torch
+cudatoolkit==10.1
+ifcfg==0.21 
+matplotlib==3.3.2 
+opencv==3.4.2 
+pytest-socket==0.3.5 
+pytorch==1.7.0 
+scipy==1.5.3 
+tensorboard==2.4.0 
+torchvision==0.8.1 
+tqdm==4.55.2 
