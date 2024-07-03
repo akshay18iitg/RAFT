@@ -339,6 +339,7 @@ def train(GPU,args):
             t0 = time.time()
             local_dict = sample_batched[0]
             images = local_dict['target'].type(torch.FloatTensor).cuda(GPU) / 256
+            plt.imshow(images[0,:])
             flows = local_dict['flow'].type(torch.FloatTensor).cuda(GPU)
             print(flows.size())
             print(images.size())
